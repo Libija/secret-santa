@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { prisma } from './config/prisma';
+import authRoutes from './routes/authRoutes';
 
 
 dotenv.config();
@@ -27,6 +28,9 @@ app.get('/health/db', async (req, res) => {
     res.status(500).json({ ok: false, message: 'DB connection FAILED' });
   }
 });
+
+
+app.use('/auth', authRoutes);
 
 const PORT = process.env.PORT || 4000;
 
