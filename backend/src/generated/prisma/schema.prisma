@@ -18,38 +18,38 @@ enum SessionMode {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  email        String   @unique
+  id           Int     @id @default(autoincrement())
+  email        String  @unique
   passwordHash String
   firstName    String
   lastName     String
-  role         Role     @default(EMPLOYEE)
-  isActive     Boolean  @default(true)
+  role         Role    @default(EMPLOYEE)
+  isActive     Boolean @default(true)
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // ADMIN: sesije koje je kreirao
   sessionsCreated SecretSantaSession[] @relation("SessionsCreatedBy")
 
   // PAROVI
-  givenPairs      Pair[] @relation("PairsGiver")
-  receivedPairs   Pair[] @relation("PairsReceiver")
+  givenPairs    Pair[] @relation("PairsGiver")
+  receivedPairs Pair[] @relation("PairsReceiver")
 
   // NAIVE RESULT – sessioni gdje je ostao unmatched
   unmatchedSessions UnmatchedUser[]
 }
 
 model SecretSantaSession {
-  id              Int       @id @default(autoincrement())
-  createdAt       DateTime  @default(now())
+  id              Int         @id @default(autoincrement())
+  createdAt       DateTime    @default(now())
   createdByUserId Int
   mode            SessionMode
 
-  createdByUser   User      @relation("SessionsCreatedBy", fields: [createdByUserId], references: [id])
+  createdByUser User @relation("SessionsCreatedBy", fields: [createdByUserId], references: [id])
 
-  pairs           Pair[]
-  unmatchedUsers  UnmatchedUser[]
+  pairs          Pair[]
+  unmatchedUsers UnmatchedUser[]
 }
 
 model Pair {
@@ -58,7 +58,7 @@ model Pair {
   giverId    Int
   receiverId Int
 
-  session  SecretSantaSession @relation(fields: [sessionId], references: [id])
+  session SecretSantaSession @relation(fields: [sessionId], references: [id])
 
   giver    User @relation("PairsGiver", fields: [giverId], references: [id])
   receiver User @relation("PairsReceiver", fields: [receiverId], references: [id])
@@ -69,8 +69,8 @@ model UnmatchedUser {
   sessionId Int
   userId    Int
 
-  session   SecretSantaSession @relation(fields: [sessionId], references: [id])
-  user      User               @relation(fields: [userId], references: [id])
+  session SecretSantaSession @relation(fields: [sessionId], references: [id])
+  user    User               @relation(fields: [userId], references: [id])
 
   @@unique([sessionId, userId])
 }
