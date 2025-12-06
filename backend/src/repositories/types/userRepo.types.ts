@@ -1,8 +1,10 @@
+export type UserRole = 'ADMIN' | 'EMPLOYEE';
+
 export interface CreateUserInput {
   email: string;
   passwordHash: string;
   firstName: string;
   lastName: string;
-  role?: 'ADMIN' | 'EMPLOYEE';
+  role?: UserRole;
   isActive?: boolean;
 }
