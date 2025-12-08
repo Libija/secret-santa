@@ -11,12 +11,15 @@ if (!JWT_SECRET) {
 
 const JWT_EXPIRES_IN = '8h';
 
-// ----------------- LOGIN -----------------
+// ----------------- LOGIN ----------------- DODAJ DA PROVJERAVA JEL AKTIVAN AKO JES MOZE LOGIN AKO NE NE MOZE THROW NESTO
 export async function login(email: string, password: string) {
   const user = await userRepository.findByEmail(email);
 
   if (!user || !user.isActive) {
     throw new Error('INVALID_CREDENTIALS');
+  }
+  if(!user.isActive){
+    throw new Error('USER_INACTIVE')
   }
 
   const isValid = await bcrypt.compare(password, user.passwordHash);

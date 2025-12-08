@@ -29,6 +29,12 @@ export async function loginHandler(
         .status(401)
         .json({ message: 'Invalid email or password' });
     }
+    
+    if (err instanceof Error && err.message === 'USER_INACTIVE') {
+    return res
+      .status(403)
+      .json({ message: 'Your account is not active' });
+  }
 
     return next(err);
   }

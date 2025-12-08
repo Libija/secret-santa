@@ -32,4 +32,15 @@ export const userRepository = {
       orderBy: { firstName: 'asc' },
     });
   },
+
+    async listAllOrderedForAdmin() {
+    return prisma.user.findMany({
+      orderBy: [
+        { isActive: 'desc' },     // true (1) ide prije false (0)
+        { firstName: 'asc' },
+        { lastName: 'asc' },
+      ],
+    });
+  },
+
 };

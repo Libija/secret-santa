@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { prisma } from './config/prisma';
 import authRoutes from './routes/authRoutes';
+import userRoutes from './routes/userRoutes';
 import { authMiddleware } from './middleware/authMiddleware';
 
 
@@ -37,6 +38,8 @@ app.get('/health/db', authMiddleware, async (req, res) => {
 
 
 app.use('/auth', authRoutes);
+app.use('/users', userRoutes);
+
 
 const PORT = process.env.PORT || 4000;
 
