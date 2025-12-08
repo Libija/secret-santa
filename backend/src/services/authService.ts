@@ -27,7 +27,7 @@ export async function login(email: string, password: string) {
 
   const token = jwt.sign(
     {
-      sub: user.id,
+      sub: user.id.toString(),
       email: user.email,
       role: user.role,
     },
@@ -78,19 +78,9 @@ export async function register(params: {
 
   const user = await userRepository.createUser(createInput);
 
-  // 4) Odmah generišemo token (kao i kod logina)
-  const token = jwt.sign(
-    {
-      sub: user.id,
-      email: user.email,
-      role: user.role,
-    },
-    JWT_SECRET,
-    { expiresIn: JWT_EXPIRES_IN },
-  );
+  
 
   return {
-    token,
     user: {
       id: user.id,
       email: user.email,
