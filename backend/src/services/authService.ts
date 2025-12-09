@@ -11,12 +11,15 @@ if (!JWT_SECRET) {
 
 const JWT_EXPIRES_IN = '8h';
 
-// ----------------- LOGIN -----------------
+// ----------------- LOGIN ----------------- DODAJ DA PROVJERAVA JEL AKTIVAN AKO JES MOZE LOGIN AKO NE NE MOZE THROW NESTO
 export async function login(email: string, password: string) {
   const user = await userRepository.findByEmail(email);
 
   if (!user || !user.isActive) {
     throw new Error('INVALID_CREDENTIALS');
+  }
+  if(!user.isActive){
+    throw new Error('USER_INACTIVE')
   }
 
   const isValid = await bcrypt.compare(password, user.passwordHash);
@@ -27,7 +30,7 @@ export async function login(email: string, password: string) {
 
   const token = jwt.sign(
     {
-      sub: user.id,
+      sub: user.id.toString(),
       email: user.email,
       role: user.role,
     },
@@ -78,19 +81,9 @@ export async function register(params: {
 
   const user = await userRepository.createUser(createInput);
 
-  // 4) Odmah generišemo token (kao i kod logina)
-  const token = jwt.sign(
-    {
-      sub: user.id,
-      email: user.email,
-      role: user.role,
-    },
-    JWT_SECRET,
-    { expiresIn: JWT_EXPIRES_IN },
-  );
+  
 
   return {
-    token,
     user: {
       id: user.id,
       email: user.email,
