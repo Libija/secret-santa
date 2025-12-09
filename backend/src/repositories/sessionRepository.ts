@@ -108,4 +108,75 @@ export const sessionRepository = {
     });
   },
 
+  async listAllSessionsSummary() {
+    return prisma.secretSantaSession.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: {
+        createdByUser: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        _count: {
+          select: {
+            pairs: true,
+            unmatchedUsers: true,
+          },
+        },
+      },
+    });
+  },
+
+  
+  async getSessionByIdWithDetails(id: number) {
+    return prisma.secretSantaSession.findUnique({
+      where: { id },
+      include: {
+        createdByUser: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        pairs: {
+          include: {
+            giver: {
+              select: {
+                id: true,
+                email: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+            receiver: {
+              select: {
+                id: true,
+                email: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+        unmatchedUsers: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                email: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  },
+
 };

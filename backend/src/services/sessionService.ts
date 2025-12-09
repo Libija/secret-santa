@@ -90,3 +90,32 @@ export async function getMyLatestAssignment(userId: number) {
   };
 }
 
+export async function getAllSessionsForAdmin() {
+  const sessions = await sessionRepository.listAllSessionsSummary();
+
+  // ovdje ih možemo malo “pripremiti” za front
+  return sessions.map((s) => ({
+    id: s.id,
+    createdAt: s.createdAt,
+    mode: s.mode,
+    createdBy: {
+      id: s.createdByUser.id,
+      email: s.createdByUser.email,
+      firstName: s.createdByUser.firstName,
+      lastName: s.createdByUser.lastName,
+    },
+    pairCount: s._count.pairs,
+    unmatchedCount: s._count.unmatchedUsers,
+  }));
+}
+
+export async function getSessionDetailsForAdmin(sessionId: number) {
+  const session = await sessionRepository.getSessionByIdWithDetails(sessionId);
+
+  if (!session) {
+    throw new Error('SESSION_NOT_FOUND');
+  }
+
+  return session;
+}
+
