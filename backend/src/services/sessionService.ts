@@ -57,3 +57,36 @@ export async function getLatestSessionForAdmin() {
 
   return session;
 }
+
+export async function getMyLatestAssignment(userId: number) {
+  const session = await sessionRepository.getLatestSessionForUser(userId);
+
+  if (!session) {
+    throw new Error('NO_SESSIONS_YET');
+  }
+
+  const pair = session.pairs[0] ?? null;
+  const isUnmatched = !pair || session.unmatchedUsers.length > 0;
+
+  if (isUnmatched) {
+    return {
+      sessionId: session.id,
+      mode: session.mode,
+      isUnmatched: true,
+      receiver: null,
+    };
+  }
+
+  return {
+    sessionId: session.id,
+    mode: session.mode,
+    isUnmatched: false,
+    receiver: {
+      id: pair.receiver.id,
+      email: pair.receiver.email,
+      firstName: pair.receiver.firstName,
+      lastName: pair.receiver.lastName,
+    },
+  };
+}
+

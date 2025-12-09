@@ -4,6 +4,7 @@ import {
   generateOptimalSessionHandler,
   generateNaiveSessionHandler,
   getLatestSessionHandler,
+  getMyLatestAssignmentHandler,
 } from '../controllers/sessionController';
 import { authMiddleware, requireAdmin } from '../middleware/authMiddleware';
 
@@ -30,5 +31,12 @@ router.get(
   requireAdmin,
   getLatestSessionHandler,
 );
+
+router.get(
+  '/me/latest',
+  authMiddleware,                
+  getMyLatestAssignmentHandler,
+);
+
 
 export default router;
