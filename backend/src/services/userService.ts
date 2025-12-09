@@ -16,3 +16,22 @@ export async function getAllUsersForAdmin() {
     updatedAt: u.updatedAt,
   }));
 }
+
+export async function setUserStatus(userId: number, isActive: boolean) {
+  const user = await userRepository.findById(userId);
+
+  if (!user) {
+    throw new Error('USER_NOT_FOUND');
+  }
+
+  const updated = await userRepository.updateStatus(userId, isActive);
+
+  return {
+    id: updated.id,
+    email: updated.email,
+    firstName: updated.firstName,
+    lastName: updated.lastName,
+    role: updated.role,
+    isActive: updated.isActive,
+  };
+}

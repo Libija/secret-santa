@@ -43,4 +43,11 @@ export const userRepository = {
     });
   },
 
+  async updateStatus(id: number, isActive: boolean) {
+    return prisma.user.update({
+      where: { id },
+      data: { isActive },
+    });
+  }
+
 };
