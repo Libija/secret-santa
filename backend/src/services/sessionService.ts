@@ -57,3 +57,65 @@ export async function getLatestSessionForAdmin() {
 
   return session;
 }
+
+export async function getMyLatestAssignment(userId: number) {
+  const session = await sessionRepository.getLatestSessionForUser(userId);
+
+  if (!session) {
+    throw new Error('NO_SESSIONS_YET');
+  }
+
+  const pair = session.pairs[0] ?? null;
+  const isUnmatched = !pair || session.unmatchedUsers.length > 0;
+
+  if (isUnmatched) {
+    return {
+      sessionId: session.id,
+      mode: session.mode,
+      isUnmatched: true,
+      receiver: null,
+    };
+  }
+
+  return {
+    sessionId: session.id,
+    mode: session.mode,
+    isUnmatched: false,
+    receiver: {
+      id: pair.receiver.id,
+      email: pair.receiver.email,
+      firstName: pair.receiver.firstName,
+      lastName: pair.receiver.lastName,
+    },
+  };
+}
+
+export async function getAllSessionsForAdmin() {
+  const sessions = await sessionRepository.listAllSessionsSummary();
+
+  // ovdje ih možemo malo “pripremiti” za front
+  return sessions.map((s) => ({
+    id: s.id,
+    createdAt: s.createdAt,
+    mode: s.mode,
+    createdBy: {
+      id: s.createdByUser.id,
+      email: s.createdByUser.email,
+      firstName: s.createdByUser.firstName,
+      lastName: s.createdByUser.lastName,
+    },
+    pairCount: s._count.pairs,
+    unmatchedCount: s._count.unmatchedUsers,
+  }));
+}
+
+export async function getSessionDetailsForAdmin(sessionId: number) {
+  const session = await sessionRepository.getSessionByIdWithDetails(sessionId);
+
+  if (!session) {
+    throw new Error('SESSION_NOT_FOUND');
+  }
+
+  return session;
+}
+

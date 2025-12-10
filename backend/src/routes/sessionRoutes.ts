@@ -4,6 +4,9 @@ import {
   generateOptimalSessionHandler,
   generateNaiveSessionHandler,
   getLatestSessionHandler,
+  getMyLatestAssignmentHandler,
+  getSessionByIdHandler,
+  listSessionsHandler
 } from '../controllers/sessionController';
 import { authMiddleware, requireAdmin } from '../middleware/authMiddleware';
 
@@ -30,5 +33,27 @@ router.get(
   requireAdmin,
   getLatestSessionHandler,
 );
+
+router.get(
+  '/me/latest',
+  authMiddleware,                
+  getMyLatestAssignmentHandler,
+);
+
+router.get(
+  '/',
+  authMiddleware,
+  requireAdmin,
+  listSessionsHandler,
+);
+
+
+router.get(
+  '/:id',
+  authMiddleware,
+  requireAdmin,
+  getSessionByIdHandler,
+);
+
 
 export default router;

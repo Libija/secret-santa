@@ -72,4 +72,111 @@ export const sessionRepository = {
       },
     });
   },
+
+    async getLatestSessionForUser(userId: number) {
+    return prisma.secretSantaSession.findFirst({
+      orderBy: { createdAt: 'desc' },
+      include: {
+        // parovi gdje je baš ovaj user giver
+        pairs: {
+          where: { giverId: userId },
+          include: {
+            receiver: {
+              select: {
+                id: true,
+                email: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+        // da vidimo da li je user uopšte završio kao unmatched
+        unmatchedUsers: {
+          where: { userId },
+        },
+        // čisto informativno – ko je kreirao sesiju
+        createdByUser: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+  },
+
+  async listAllSessionsSummary() {
+    return prisma.secretSantaSession.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: {
+        createdByUser: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        _count: {
+          select: {
+            pairs: true,
+            unmatchedUsers: true,
+          },
+        },
+      },
+    });
+  },
+
+  
+  async getSessionByIdWithDetails(id: number) {
+    return prisma.secretSantaSession.findUnique({
+      where: { id },
+      include: {
+        createdByUser: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        pairs: {
+          include: {
+            giver: {
+              select: {
+                id: true,
+                email: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+            receiver: {
+              select: {
+                id: true,
+                email: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+        unmatchedUsers: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                email: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  },
+
 };
