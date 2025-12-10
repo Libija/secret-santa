@@ -22,10 +22,18 @@ export interface SessionPairDetail {
   receiver: string;
 }
 
+// ✨ novi tip za unmatched user-a
+export interface UnmatchedUserSummary {
+  id: number;
+  fullName: string;
+}
+
+// DODANO unmatchedUsers ovdje 👇
 export interface SessionDetails {
   id: number;
   pairs: SessionPairDetail[];
   unmatchedCount: number;
+  unmatchedUsers: UnmatchedUserSummary[];
 }
 
 export interface CreateSessionProps {
