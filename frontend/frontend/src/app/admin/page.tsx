@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-// relative importi, pošto si komponente stavio u src/app/components
+
 import { Button } from "../components/ui/button";
 import AdminNav from "../components/AdminNav";
-//import SessionsList from "../components/SessionsList";
+import SessionsList from "../components/SessionsList";
 import UsersList from "../components/UsersList";
-//import CreateSession from "../components/CreateSession";
+import CreateSession from "../components/CreateSession";
 
 type AdminView = "dashboard" | "sessions" | "users" | "create";
 

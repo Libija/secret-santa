@@ -1,13 +1,9 @@
 "use client";
 
 import { Button } from "./ui/button";
+import { AdminNavProps } from "../../../types/adminnav"
 
-type AdminView = "dashboard" | "sessions" | "users" | "create";
 
-interface AdminNavProps {
-  currentView: AdminView;
-  onViewChange: (view: AdminView) => void;
-}
 
 export default function AdminNav({ currentView, onViewChange }: AdminNavProps) {
   return (

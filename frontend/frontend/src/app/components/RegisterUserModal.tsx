@@ -3,15 +3,12 @@
 import type React from "react";
 import { useState } from "react";
 import { Button } from "./ui/button";
+import { RegisterUserModalProps } from "../../../types/register"
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
-interface RegisterUserModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onSuccess: () => void;
-}
+
 
 export default function RegisterUserModal({
   open,
