@@ -1,985 +1,400 @@
-# Secret Santa – Gift Exchange Manager 🎄
+🎄 Secret Santa – Full Stack Application
+Kompletnа funkcionalna i tehnička dokumentacija
 
-Full-stack rješenje za organizaciju **Secret Santa** razmjene poklona unutar firme/tima.  
-Aplikacija ima **admin** i **user** dio, podržava dva algoritma za sparivanje učesnika i nudi jasnu administraciju sesija i korisnika.
+📌 Sadržaj
 
----
 
-## 1. Pregled funkcionalnosti
+Opis projekta
 
-### Uloge
 
-- **ADMIN**
-  - Login
-  - Pregled svih korisnika
-  - Registracija novih korisnika (usera)
-  - Aktiviranje/deaktiviranje korisnika
-  - Kreiranje novih Secret Santa sesija sa izborom algoritma:
-    - `OPTIMAL`
-    - `NAIVE`
-  - Pregled svih sesija (sa osnovnim statistikama)
-  - Pregled detalja pojedinačne sesije (svi parovi + unmatched)
+Glavne funkcionalnosti
 
-- **USER (EMPLOYEE)**
-  - Login
-  - Pregled svog zadatka za **zadnju kreiranu sesiju**:
-    - Za koga kupuje poklon, ili  
-    - Da li je ostao *unmatched*
 
----
+Uloge korisnika
 
-## 2. Zašto postoje dva algoritma?
 
-Sistem podržava dva algoritma sparivanja:
+Arhitektura sistema
 
-1. **Optimal Algorithm (`OPTIMAL`)**
-   - Cilj: da **svi koji učestvuju dobiju zadatak** (nema unmatched korisnika), kad god je to matematički moguće.
-   - Koristi se algoritam koji traži “perfektno uparivanje” (perfect matching) u grafu učesnika.
-   - Idealno rješenje za realni Secret Santa u firmi – svi igraju, svi dobiju zadatak i dobiju poklon.
 
-2. **Naive Algorithm (`NAIVE`)**
-   - Radi **nasumično (random) uparivanje**.
-   - Može se desiti:
-     - da neka osoba ne dobije zadatak (unmatched),
-     - da algoritam odbaci neke kombinacije (npr. da ne dozvoli da neko kupuje sam sebi) i time ostavi višak.
-   - Koristo je didaktički – pokazuje razliku između “pametnog” i “naivnog” algoritma, i može poslužiti kao fallback ili demo mod.
+Tehnologije
 
-Oba algoritma vraćaju isti oblik rezultata:
 
-```ts
-{
-  pairs: { giverId: number; receiverId: number }[];
-  unmatchedUserIds: number[];
-}
-Na osnovu toga backend kreira sesiju i sve upisuje u bazu.
+Algoritmi za uparivanje
 
-3. Tehnologije
+
+Baza podataka – model
+
+
+API rute i objašnjenja
+
+
+Frontend struktura i logika
+
+
+Dijagrami sistema
+
+
+Kako pokrenuti projekat
+
+
+Zašto je ovakva arhitektura izabrana
+
+
+
+📖 Opis projekta
+Secret Santa je full-stack web aplikacija za organizaciju razmjene poklona unutar kompanije.
+Administrator kreira sesiju („Secret Santa“ rundu), a sistem automatski generiše parove:
+
+
+ko kome kupuje poklon
+
+
+ko je ostao bez para (ako algoritam nije optimalan)
+
+
+Korisnici (zaposlenici) se uloguju i odmah vide:
+
+
+kome kupuju poklon
+
+
+da li su unmatched
+
+
+poruku da admin još nije kreirao sesiju (ako nema nijedne)
+
+
+Cilj projekta je demonstracija znanja u:
+
+
+backend arhitekturi
+
+
+frontend arhitekturi
+
+
+algoritmima
+
+
+zaštiti pristupa (autentikacija / autorizacija)
+
+
+tehničkoj dokumentaciji i dizajnu sistema
+
+
+
+🚀 Glavne funkcionalnosti
+👤 Admin
+
+
+Login
+
+
+Pregled svih korisnika
+
+
+Aktiviranje/deaktiviranje korisnika
+
+
+Registracija novih korisnika
+
+
+Kreiranje nove Secret Santa sesije
+
+
+Pregled svih sesija
+
+
+Detaljan prikaz uparenih korisnika
+
+
+Pregled unmatched korisnika
+
+
+🧑‍💼 User
+
+
+Login
+
+
+Pregled kome kupuje poklon
+
+
+Obavijest da je unmatched
+
+
+Obavijest da sesija još ne postoji
+
+
+Logout
+
+
+
+🔐 Uloge korisnika
+UlogaOpisADMINIma sve privilegije – upravlja sistemomEMPLOYEEMože samo da vidi svoje uparivanje
+➡️ Registracija je dozvoljena samo adminu
+Zašto?
+
+
+jer zaposlena osoba ne treba sama kreirati nalog
+
+
+admin kontroliše ko učestvuje
+
+
+osigurava se integritet i sprečava zloupotreba
+
+
+
+🏛 Arhitektura sistema
+Frontend (Next.js)  →  Backend API (Express + Prisma)  →  PostgreSQL Database
+
+Frontend (Next.js 14)
+
+
+Client-side components ("use client")
+
+
+Custom UI sistem (Button, Card, Badge…) inspirisan shadcn/ui
+
+
+State management per-page (useState/useEffect)
+
+
+LocalStorage za token i user info
+
+
+Routing: /admin i /user dashboardi
+
+
 Backend
-Node.js / Express
 
-TypeScript
 
-Prisma ORM + PostgreSQL
+Node.js + Express
 
-JWT autentikacija
 
-bcrypt za hashiranje šifri
+Prisma ORM
 
-Strukturiran u slojeve:
 
-repositories/ – direktan rad s bazom (Prisma)
+Services + Repository pattern (čisto razdvajanje logike)
 
-services/ – poslovna logika (algoritmi, validacije)
 
-controllers/ – Express handleri
+Auth middleware (JWT)
 
-routes/ – definicija API ruta
 
-middleware/ – auth, provjera role
+Dva algoritma generisanja parova
 
-Frontend
-Next.js 16 (App Router)
 
-React 19
 
-TypeScript
+🧠 Algoritmi za uparivanje
+Postoje dva načina kreiranja sesije.
 
-Tailwind-like utility klase (custom UI)
+1️⃣ OPTIMAL (zadani / preporučeni)
+Garantuje da:
 
-Komponente:
 
-LoginForm
+svi korisnici imaju par
 
-AdminDashboard + AdminNav
 
-UsersList + RegisterUserModal
+niko ne dobija samog sebe
 
-SessionsList
 
-CreateSession
+nema ciklusa dužine 1
 
-UserDashboard
 
-ui/button, ui/card, ui/badge, itd. – osnovni UI building blocks
+kreira "perfect matching"
 
-4. Arhitektura sistema
-4.1. Visok nivo
-mermaid
-Copy code
-flowchart LR
-  subgraph FE[Frontend - Next.js]
-    L[/ "/" Login page/]
-    A[/ "/admin" Admin dashboard/]
-    U[/ "/user" User dashboard/]
-  end
 
-  subgraph BE[Backend - Express API]
-    Auth[/ /auth routes/]
-    Users[/ /users routes/]
-    Sessions[/ /sessions routes/]
-  end
+U osnovi radi kao:
+1. napravi listu svih korisnika
+2. pronađi permutaciju gdje niko ne daje poklon sam sebi
+3. ako postoji – gotovi ste (uvijek postoji ako su ≥ 2 korisnika)
 
-  DB[(PostgreSQL + Prisma)]
+2️⃣ NAIVE (slučajni shuffle)
+Radi kao:
 
-  L --> Auth
-  A --> Auth
-  A --> Users
-  A --> Sessions
-  U --> SessionsMe[/GET /sessions/me/latest/]
 
-  BE --> DB
-4.2. Model baze (pojednostavljen ER dijagram)
-mermaid
-Copy code
-classDiagram
-  class User {
-    int id
-    string email
-    string passwordHash
-    string firstName
-    string lastName
-    UserRole role  // ADMIN | EMPLOYEE
-    bool isActive
-  }
+permutacija korisnika
 
-  class SecretSantaSession {
-    int id
-    SessionMode mode   // OPTIMAL | NAIVE
-    datetime createdAt
-    int createdByUserId
-  }
 
-  class Pair {
-    int id
-    int sessionId
-    int giverId
-    int receiverId
-  }
+parovi se kreiraju redom
 
-  class UnmatchedUser {
-    int id
-    int sessionId
-    int userId
-  }
 
-  User "1" --> "many" SecretSantaSession : createdBy
-  SecretSantaSession "1" --> "many" Pair : pairs
-  SecretSantaSession "1" --> "many" UnmatchedUser : unmatchedUsers
-  User "1" --> "many" Pair : gives
-  User "1" --> "many" Pair : receives
-  User "1" --> "many" UnmatchedUser : canBeUnmatched
-5. Backend – slojevi i logika
-5.1. Repozitorij: sessionRepository
-Glavne funkcije:
+ali moguće:
 
-createSessionWithResults(input)
 
-Otvara prisma.$transaction:
+da neka osoba ostane bez para
 
-kreira SecretSantaSession
 
-createMany za Pair (ako ih ima)
+da ciklusi budu nepravični
 
-createMany za UnmatchedUser (ako ih ima)
 
-vraća punu sesiju s: pairs, unmatchedUsers, createdByUser
+da viška korisnika ostane unmatched
 
-Osigurava da se sve upiše ili ništa (atomicnost).
 
-getLatestSessionWithDetails()
 
-Najnovija sesija (orderBy createdAt desc) sa:
 
-pairs, unmatchedUsers, createdByUser
+Ovo postoji da se pokaže poređenje algoritama i da admin vidi razliku.
 
-getLatestSessionForUser(userId)
+🗃 Baza podataka – model
+User (id, firstName, lastName, email, role, isActive)
+SecretSantaSession (id, createdByUserId, mode, createdAt)
+Pair (id, sessionId, giverId, receiverId)
+UnmatchedUser (id, sessionId, userId)
 
-Najnovija sesija gdje:
+Relacije
+Session 1 --- N Pair
+Session 1 --- N UnmatchedUser
 
-pairs su filtrirani na giverId = userId
+User 1 --- N Pair (giver)
+User 1 --- N Pair (receiver)
 
-unmatchedUsers filtrirani na userId
 
-Vraća i osnovne info o creatoru.
+🔌 API rute i objašnjenja
+AUTH
+RutaMetodaAccessOpis/auth/loginPOSTPublicLogin korisnika/auth/registerPOSTAdmin onlyKreiranje korisnika
 
-listAllSessionsSummary()
+SESSION ROUTES (admin only)
+RutaMetodaOpis/sessions/generate-optimalPOSTKreira sesiju koristeći optimal algoritam/sessions/generate-naivePOSTKreira sesiju koristeći naive algoritam/sessionsGETLista svih sesija (sa brojem parova)/sessions/:idGETDetalji jedne sesije/sessions/latestGETNajnovija sesija
 
-Vraća listu svih sesija (sortirano od najnovije) sa:
-
-createdByUser
-
-_count.pairs, _count.unmatchedUsers
-
-getSessionByIdWithDetails(id)
-
-Vraća jednu sesiju sa:
-
-pairs + giver + receiver
-
-unmatchedUsers + user
-
-createdByUser
-
-5.2. Service sloj: sessionService
-generateOptimalSession(adminUserId)
-
-userRepository.listAllActive() – svi aktivni korisnici (EMPLOYEE + eventualno ADMIN ako želiš)
-
-Ako manje od 2 -> baca NOT_ENOUGH_USERS
-
-generateOptimal(users.map(u => ({ id: u.id })))
-
-sessionRepository.createSessionWithResults(...) s mode = SessionMode.OPTIMAL
-
-generateNaiveSession(adminUserId)
-
-isto kao gore, ali koristi generateNaive i mode = SessionMode.NAIVE.
-
-getLatestSessionForAdmin()
-
-koristi getLatestSessionWithDetails
-
-ako nema sesija -> NO_SESSIONS_YET
-
-getMyLatestAssignment(userId)
-
-sessionRepository.getLatestSessionForUser(userId)
-
-ako nema sesija -> NO_SESSIONS_YET
-
-uzima pair = session.pairs[0] ?? null
-
-isUnmatched je true ako nema para ili ako session.unmatchedUsers.length > 0
-
-vraća DTO oblika:
-
-ts
-Copy code
-// kad je unmatched
+USER ROUTES
+RutaMetodaOpis/user/me/latestGETZa employee-ja – ko mu je par
+Backend uvijek vraća strukturu:
 {
-  sessionId: number;
-  mode: SessionMode;
-  isUnmatched: true;
-  receiver: null;
+  sessionId,
+  mode,
+  isUnmatched,
+  receiver: { firstName, lastName } | null
 }
 
-// kad postoji zadatak
-{
-  sessionId: number;
-  mode: SessionMode;
-  isUnmatched: false;
-  receiver: {
-    id: number;
-    email: string;
-    firstName: string;
-    lastName: string;
-  };
-}
-getAllSessionsForAdmin()
 
-koristi listAllSessionsSummary i mapira u jednostavan summary za frontend:
+🎨 Frontend struktura i logika
+src/
+  app/
+    admin/
+      page.tsx          ← Admin Dashboard
+    user/
+      page.tsx          ← User Dashboard
+    components/
+      LoginForm.tsx
+      UsersList.tsx
+      CreateSession.tsx
+      SessionsList.tsx
+      RegisterUserModal.tsx
+      ui/
+        button.tsx
+        card.tsx
+        badge.tsx
 
-id, createdAt, mode, createdBy, pairCount, unmatchedCount
+Frontend radi kroz:
 
-getSessionDetailsForAdmin(sessionId)
 
-koristi getSessionByIdWithDetails
+localStorage za čuvanje tokena
 
-ako nema -> SESSION_NOT_FOUND
 
-5.3. Rute: sessionRoutes.ts
-POST /sessions/generate-optimal – admin only
+provjeru role (ADMIN / USER)
 
-POST /sessions/generate-naive – admin only
 
-GET /sessions/latest – admin only
+svaki dashboard ima vlastiti view state
 
-GET /sessions/me/latest – običan user (employee), vraća njegov zadatak
 
-GET /sessions – admin only, lista svih sesija (summary)
+API pozive prema backendu
 
-GET /sessions/:id – admin only, detalji jedne sesije
 
-5.4. Rute: auth i users
-POST /auth/login
 
-prima email, password
+📊 Dijagrami sistema
 
-vraća { token, user } gdje je user:
+1️⃣ Use Case dijagram
+          +-------------------+
+          |      ADMIN        |
+          +-------------------+
+                |       \
+                |        \
+                v         v
+     Create Session     Manage Users
+                |
+                v
+          View All Sessions
 
-id, email, firstName, lastName, role
+          +-------------------+
+          |     EMPLOYEE      |
+          +-------------------+
+                 |
+                 v
+        View Assignment (Gift Info)
 
-POST /auth/register – samo ADMIN
 
-kreira novog korisnika (EMPLOYEE po defaultu) i hashira password.
+2️⃣ Sekvencijski dijagram – kreiranje sesije
+Admin → Frontend → Backend → SessionService → SessionRepository → DB
+           |            |           |               |
+           | POST /generate-optimal |               |
+           | ---------------------> |               |
+           |                        | find users    |
+           |                        | run algorithm |
+           |                        | save session  |
+           | <--------------------- | return data   |
+Display Success
 
-Zašto samo ADMIN?
 
-jer je cilj da učesnici dolaze isključivo preko admina (npr. HR), ne želiš “random” ljude u sistemu.
+3️⃣ Sekvencijski dijagram – user vidi assignment
+User → Frontend → Backend (/user/me/latest) → Service → DB
+           |               |                    |
+           | GET request   |                    |
+           | ------------> | get latest session |
+           |               | find pair          |
+           | <------------ | return result      |
+Frontend prikaže receivera ili unmatched poruku
 
-GET /users – admin only, vraća listu svih usera
 
-PATCH /users/:id/status – admin only
-
-mijenja isActive (aktiviran/deaktiviran)
-
-5.5. Auth & autorizacija
-authMiddleware
-
-parsira Authorization: Bearer <token>
-
-validira JWT
-
-upisuje req.user (id, role, itd.)
-
-requireAdmin
-
-provjerava da je req.user.role === "ADMIN"
-
-u suprotnom vraća 403
-
-6. Frontend – funkcionalni opis
-6.1. Login stranica (/)
-Komponente:
-
-page.tsx (Home)
-
-useEffect:
-
-čita iz localStorage: token, userRole
-
-ako postoji token:
-
-ADMIN -> redirect na /admin
-
-inače -> /user
-
-ako nema token → prikaže login UI
-
-prikazuje:
-
-animirane snowflakes
-
-naslov “Secret Santa”
-
-LoginForm
-
-LoginForm
-
-state: email, password, error, isLoading
-
-API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000"
-
-handleSubmit:
-
-POST ${API_BASE_URL}/auth/login
-
-očekuje { token, user }
-
-ako !response.ok:
-
-čita data.message ili vrati generičku poruku
-
-ako ok:
-
-čuva u localStorage:
-
-token
-
-userId
-
-userRole
-
-userEmail
-
-userName = firstName + lastName
-
-redirect:
-
-admin -> /admin
-
-user -> /user
-
-UI:
-
-Card sa zaglavljem “Welcome”
-
-input za email/password
-
-Button “Sign In”
-
-prikaz error poruke ako nešto pođe po zlu
-
-6.2. Admin dashboard (/admin)
-AdminDashboard
-
-State:
-
-view: "dashboard" | "sessions" | "users" | "create"
-
-userName
-
-isLoading
-
-useEffect:
-
-čita token, role, userName
-
-ako !token || role !== "ADMIN" → router.push("/")
-
-inače userName = localStorage.userName, isLoading = false
-
-Header:
-
-lijevo: “Admin Panel” + “Welcome, {userName}”
-
-desno: AdminNav + “Logout” dugme
-
-logout briše localStorage i vraća na /
-
-Glavni sadržaj:
-
-view === "dashboard":
-
-3 kartice:
-
-View Sessions
-
-Manage Users
-
-Create Session
-
-svaka kartica samo mijenja view state.
-
-view === "sessions" → SessionsList
-
-view === "users" → UsersList
-
-view === "create" → CreateSession
-
-AdminNav
-
-Horizontalni mini-navbar:
-
-Dashboard, View Sessions, Manage Users, Create Session
-
-ističe aktivan tab klasama (bg-blue-600 text-white)
-
-6.3. UsersList + RegisterUserModal
-UsersList
-
-State:
-
-users: User[]
-
-isLoading
-
-error
-
-showRegisterModal
-
-loadUsers():
-
-čita token iz localStorage
-
-GET ${API_BASE_URL}/users
-
-očekuje { users: [...] } i postavlja setUsers(list)
-
-useEffect → odmah zove loadUsers()
-
-handleToggleStatus(user):
-
-računa nextActive = !user.isActive
-
-PATCH ${API_BASE_URL}/users/${user.id}/status sa body { isActive: nextActive }
-
-ako uspije, ažurira users state.
-
-handleUserCreated():
-
-zatvara modal
-
-refreshuje listu zvanjem loadUsers()
-
-UI:
-
-Header: All Users (N) + dugme Register New User
-
-Lista kartica:
-
-ime + prezime + email
-
-Badge za rolu (ADMIN/EMPLOYEE)
-
-dugme za aktiviranje/deaktiviranje (✓ Active / ✕ Inactive)
-
-RegisterUserModal
-
-Props:
-
-open, onOpenChange, onSuccess
-
-State: firstName, lastName, email, password, error, isLoading
-
-handleSubmit:
-
-čita token
-
-POST ${API_BASE_URL}/auth/register
-
-ako !res.ok → prikaže error
-
-ako ok:
-
-reset polja
-
-onOpenChange(false)
-
-onSuccess() (da parent refreša listu)
-
-UI:
-
-Full-screen overlay bg-black/50
-
-Modal Card:
-
-naslov “Register New User”
-
-forma sa 4 inputa
-
-dugmad “Cancel” i “Register”
-
-6.4. CreateSession
-CreateSession
-
-Props: onSuccess: () => void
-
-State:
-
-mode: "NAIVE" | "OPTIMAL" (default "OPTIMAL")
-
-isLoading, error, success
-
-handleCreate():
-
-čisti error i success
-
-čita token
-
-POST ${API_BASE_URL}/sessions/generate-optimal ili /generate-naive
-
-u tvojoj implementaciji je već prilagođeno da gađa postojeće rute.
-
-ako error → ispis poruke
-
-ako uspjeh →
-
-prikaže poruku (npr. “Session created successfully!”)
-
-resetuje mode na "OPTIMAL"
-
-pozove onSuccess() (npr. admin view prebaci na “sessions”)
-
-UI:
-
-Card s dva “radio” boxa:
-
-Optimal Algorithm
-
-Naive Algorithm
-
-Dugme “Create Session 🎄”
-
-6.5. SessionsList (Admin – lista svih sesija)
-SessionsList
-
-Tipovi (u types/session.ts):
-
-ts
-Copy code
-export interface SessionSummary {
-  id: number;
-  createdAt: string;
-  mode: "NAIVE" | "OPTIMAL";
-  createdBy: {
-    id: number;
-    email: string;
-    firstName: string;
-    lastName: string;
-  };
-  pairCount: number;
-  unmatchedCount: number;
-}
-
-export interface SessionPairDetail {
-  id: number;
-  giver: string;
-  receiver: string;
-}
-
-export interface SessionDetails {
-  id: number;
-  pairs: SessionPairDetail[];
-  unmatchedCount: number;
-}
-State:
-
-sessions: SessionSummary[]
-
-detailsById: Record<number, SessionDetails | null>
-
-expandedSessionId: number | null
-
-detailsLoadingId: number | null
-
-isLoading, error
-
-loadSessions():
-
-GET ${API_BASE_URL}/sessions
-
-očekuje { sessions: SessionSummary[] }
-
-setSessions(list)
-
-loadSessionDetails(sessionId):
-
-ako imamo već detailsById[sessionId] → ne radi ništa
-
-GET ${API_BASE_URL}/sessions/${sessionId}
-
-očekuje objekt sa pairs[] i unmatchedUsers[]
-
-mapira:
-
-pairs → { id, giver: "Ime Prezime", receiver: "Ime Prezime" }
-
-unmatchedCount = rawUnmatched.length
-
-upisuje u detailsById
-
-handleToggleExpand(sessionId):
-
-ako je već otvoren → zatvara (setExpandedSessionId(null))
-
-inače:
-
-await loadSessionDetails(sessionId)
-
-setExpandedSessionId(sessionId)
-
-Isticanje zadnje kreirane sesije
-
-Pošto backend vraća sesije sortirane orderBy createdAt desc, prvi element u sessions je zadnja kreirana sesija.
-
-U komponenti možeš vizualno istaknuti prvu sesiju, npr.:
-
-tsx
-Copy code
-const isLatest = sessions[0]?.id === session.id;
-
-<Card
-  key={session.id}
-  className={
-    "bg-white/95 backdrop-blur border-blue-200" +
-    (isLatest ? " ring-2 ring-green-400 shadow-lg" : "")
-  }
->
-  {/* ... ostatak */}
-Tako admin odmah vidi koja je zadnja generisana sesija.
-
-Prikaz unmatched usera po imenu (ako backend vrati detalje)
-
-U loadSessionDetails već imaš rawUnmatched.
-
-Ako želiš prikazati i imena, proširi SessionDetails:
-
-ts
-Copy code
-export interface UnmatchedUserDetail {
-  id: number;
-  fullName: string;
-}
-
-export interface SessionDetails {
-  id: number;
-  pairs: SessionPairDetail[];
-  unmatchedCount: number;
-  unmatchedUsers: UnmatchedUserDetail[];
-}
-I pri mapiranju:
-
-ts
-Copy code
-const unmatchedUsers: UnmatchedUserDetail[] = rawUnmatched.map((u) => ({
-  id: u.user.id,
-  fullName: `${u.user.firstName} ${u.user.lastName}`,
-}));
-
-const details: SessionDetails = {
-  id: data.id,
-  pairs,
-  unmatchedCount: unmatchedUsers.length,
-  unmatchedUsers,
-};
-U renderu (unutar isExpanded && details):
-
-tsx
-Copy code
-{details.unmatchedUsers.length > 0 && (
-  <div className="p-3 bg-yellow-50 border border-yellow-300 rounded-lg space-y-2">
-    <p className="flex items-center gap-2 text-yellow-800 font-medium">
-      <span>⚠️</span>
-      {details.unmatchedUsers.length} unmatched user
-      {details.unmatchedUsers.length > 1 ? "s" : ""}:
-    </p>
-    <ul className="list-disc list-inside text-sm text-yellow-900">
-      {details.unmatchedUsers.map((u) => (
-        <li key={u.id}>{u.fullName}</li>
-      ))}
-    </ul>
-  </div>
-)}
-6.6. UserDashboard (/user)
-UserDashboard
-
-State:
-
-userName
-
-assignment (zadnji zadatak) ili null
-
-isLoading
-
-useEffect:
-
-čita token, userId, userName iz localStorage
-
-ako nema token → userName = "User" i ne zove API (ili može redirect)
-
-ako ima userId + token → zove fetchAssignment(token)
-
-fetchAssignment(token):
-
-GET ${API_BASE_URL}/sessions/me/latest (na backend ruti)
-
-očekuje:
-
-ts
-Copy code
-type MyAssignment =
-  | {
-      sessionId: number;
-      mode: "NAIVE" | "OPTIMAL";
-      isUnmatched: true;
-      receiver: null;
-    }
-  | {
-      sessionId: number;
-      mode: "NAIVE" | "OPTIMAL";
-      isUnmatched: false;
-      receiver: {
-        id: number;
-        email: string;
-        firstName: string;
-        lastName: string;
-      };
-    }
-na frontu možeš to mapirati u:
-
-ts
-Copy code
-setGiftInfo({
-  matched: !data.isUnmatched,
-  receiver: data.receiver ? `${data.receiver.firstName} ${data.receiver.lastName}` : "",
-});
-UI:
-
-Header s Logout dugmetom (čišćenje localStorage + redirect /)
-
-Kartica:
-
-Ako isLoading → “Loading…”
-
-Ako matched:
-
-“You are buying a gift for: {receiver}”
-
-Ako !matched:
-
-“You haven't been matched yet. An admin will create a session soon…”
-
-7. Sekvencijski dijagrami
-7.1. Kreiranje nove sesije (admin → optimal)
-mermaid
-Copy code
-sequenceDiagram
-  participant A as Admin (browser)
-  participant FE as Next.js Frontend
-  participant BE as Express API
-  participant Svc as Session Service
-  participant Repo as Session Repository
-  participant DB as Postgres
-
-  A->>FE: klik na "Create Session (OPTIMAL)"
-  FE->>BE: POST /sessions/generate-optimal (Bearer token)
-  BE->>Svc: generateOptimalSession(adminUserId)
-  Svc->>Repo: userRepository.listAllActive()
-  Repo->>DB: SELECT * FROM User WHERE isActive = true
-  DB-->>Repo: lista aktivnih usera
-  Svc->>Svc: generateOptimal(users) // gradi pairs + unmatchedUserIds
-  Svc->>Repo: createSessionWithResults(...)
-  Repo->>DB: INSERT secretSantaSession, pairs, unmatchedUsers (transaction)
-  DB-->>Repo: commit ok
-  Repo-->>Svc: sesija sa detaljima
-  Svc-->>BE: session DTO
-  BE-->>FE: 201 + JSON
-  FE-->>A: prikaže “Session created successfully”
-7.2. User vidi svoj zadatak
-mermaid
-Copy code
-sequenceDiagram
-  participant U as User (browser)
-  participant FE as Next.js Frontend
-  participant BE as Express API
-  participant Svc as Session Service
-  participant Repo as Session Repository
-  participant DB as Postgres
-
-  U->>FE: otvara /user (ima token u localStorage)
-  FE->>BE: GET /sessions/me/latest (Bearer token)
-  BE->>Svc: getMyLatestAssignment(userId)
-  Svc->>Repo: getLatestSessionForUser(userId)
-  Repo->>DB: query secretSantaSession + pairs (giver=user) + unmatchedUsers(user)
-  DB-->>Repo: sesija s parovima i unmatched
-  Repo-->>Svc: session objekt
-  Svc->>Svc: izračuna {isUnmatched, receiver?}
-  Svc-->>BE: DTO o zadatku
-  BE-->>FE: JSON response
-  FE-->>U: prikaže ili:
-    Note over FE: “You are buying a gift for X”
-    Note over FE: ili “You haven't been matched yet”
-8. Kako pokrenuti projekat lokalno
-8.1. Preduvjeti
-Node.js (preporuka LTS verzija)
-
-PostgreSQL
-
-npm ili pnpm
-
-8.2. Backend
-Pretpostavka: backend se nalazi u folderu backend/.
-
-Instalacija:
-
-bash
-Copy code
+▶️ Kako pokrenuti projekat
+Backend
 cd backend
 npm install
-Postavi .env (primjer):
-
-env
-Copy code
-DATABASE_URL="postgresql://user:password@localhost:5432/secretsanta"
-JWT_SECRET="super-secure-secret"
-PORT=4000
-Prisma migracije i (opcionalno) seed:
-
-bash
-Copy code
 npx prisma migrate dev
-# npx prisma db seed   # ako imaš seed skriptu
-Pokretanje:
-
-bash
-Copy code
 npm run dev
-# API sluša npr. na http://localhost:4000
-8.3. Frontend
-Pretpostavka: frontend je u frontend/.
 
-Instalacija:
-
-bash
-Copy code
+Frontend
 cd frontend
 npm install
-.env.local:
-
-env
-Copy code
-NEXT_PUBLIC_API_URL=http://localhost:4000
-Pokretanje dev servera:
-
-bash
-Copy code
 npm run dev
-# Frontend na http://localhost:3000
-Test flow:
 
-Otvori http://localhost:3000
 
-Login kao admin (korisnik kojeg si kreirao u bazi)
+💡 Zašto je ovakva arhitektura izabrana?
+✔ Repository + Service pattern
+Čisti backend, jasna odvojenost:
 
-Dodaj nove usere preko admin UI
 
-Kreiraj sesiju (OPTIMAL/NAIVE)
+service = biznis logika
 
-Uloguj se kao neki od tih usera da vidiš svoj zadatak.
 
-9. Zašto je registracija samo na admin strani?
-U realnom scenariju Secret Santa sistema:
+repository = rad sa bazom
 
-učesnike obično dodaje HR / admin,
 
-želiš kontrolisati ko uopće ulazi u sistem (npr. samo uposlenici firme),
+controller = HTTP responsi
 
-ne želiš da se bilo ko “sam od sebe” registruje i uđe u razmjenu poklona.
 
-Zato:
+✔ Algoritmi odvojeni u /algorithms folder
+Testabilno, čitko, može se proširiti.
+✔ Next.js
+Omogućuje:
 
-POST /auth/register je ograničen na ADMIN rolu (requireAdmin middleware),
 
-obični useri se ne mogu sami registrirati – dobiju account kada ih admin doda.
+reaktivni UI
 
-10. Potencijalna unapređenja
-E-mail notifikacije:
 
-slanje maila svakom useru nakon generisanja sesije sa informacijom “za koga kupuje”.
+jednostavno rukovanje formama
 
-Podešavanje budžeta i dodatnih pravila (npr. maksimalna cijena poklona, exclude parovi).
 
-Višestruke grupe / timovi (npr. različite Secret Santa sesije u istom sistemu).
+komponente se modularno prave
 
-UI:
 
-pagination / filtriranje u listama usera i sesija,
+sigurnije rukovanje route pristupom
 
-bolje isticanje zadnje sesije i prikaz statistika (npr. graf parova).
 
-11. Zaključak
-Ovo rješenje pokriva:
+✔ Admin i User dijeljeni, ali odvojeni dashboardi
+Daje bolju UX jasnoću.
+✔ UI sistem (Card, Button, Badge)
+Uniforman izgled, lakše je širiti UI.
 
-kompletan admin flow:
 
-upravljanje korisnicima,
 
-generisanje sesija s dva algoritma,
-
-pregled svih parova i unmatched učesnika;
-
-kompletan user flow:
-
-login,
-
-pregled vlastitog Secret Santa zadatka za zadnju kreiranu sesiju.
-
-Arhitektura je čisto slojevita (repository → service → controller → routes), a frontend je organizovan kroz Next.js App Router sa jasnom podjelom po ulogama i komponentama.
-README se može koristiti i kao tehnička i funkcionalna dokumentacija projekta.
-
-yaml
-Copy code
-
----
-::contentReference[oaicite:0]{index=0}
