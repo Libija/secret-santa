@@ -216,7 +216,7 @@ Copy code
 
 ---
 
-## 📌 Zašto 등록 korisnika može samo ADMIN?
+## 📌 Zašto registraciju korisnika može izvršiti samo ADMIN?
 
 ✅ Sigurnost sistema  
 ✅ Kontrolisana organizacija  
@@ -233,7 +233,6 @@ npm install
 npm run dev
 Frontend:
 bash
-Copy code
 npm install
 npm run dev
 ✅ Zaključak
@@ -252,6 +251,6 @@ Praktičnu primjenu u realnom scenariju
 🔐 Sistem je spreman za produkciju uz minimalne prilagodbe (deploy, SSL, env promjenljive).
 
 Autor:
-[Ime i prezime]
-Fakultet / Projekat: Secret Santa Web Application
+Emrah Libić
+Projekat: Secret Santa Web Application
 Tehnologije: Node.js, Next.js, PostgreSQL, Prisma, JWT
