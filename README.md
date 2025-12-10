@@ -1,400 +1,257 @@
-🎄 Secret Santa – Full Stack Application
-Kompletnа funkcionalna i tehnička dokumentacija
+# 🎁 Secret Santa Web Application – Full Technical Documentation
 
-📌 Sadržaj
+## 📌 Opis projekta
 
+**Secret Santa Web Application** je full-stack web aplikacija za upravljanje Secret Santa razmjenom poklona u organizaciji (firma, škola, tim).  
+Sistem omogućava administratorima da:
 
-Opis projekta
+- Registruju korisnike  
+- Aktiviraju/deaktiviraju korisnike  
+- Kreiraju Secret Santa sesije koristeći jedan od dva algoritma  
+- Pregledaju sve sesije i tačne parove  
 
+Korisnici (EMPLOYEE) mogu:
 
-Glavne funkcionalnosti
+- Vidjeti **samo svog dodijeljenog primatelja poklona**
+- Dobiti informaciju da li su **unmatched**
+- Vidjeti samo **zadnju aktivnu sesiju**
 
+Aplikacija je **sigurna, skalabilna i backend-driven**, sa jasnim razdvajanjem uloga.
 
-Uloge korisnika
+---
 
+## 🧰 Tehnologije
 
-Arhitektura sistema
+### ✅ Backend
+- **Node.js**
+- **Express.js**
+- **TypeScript**
+- **Prisma ORM**
+- **PostgreSQL**
+- **JWT Authentication**
+- **bcrypt**
+- **REST API arhitektura**
 
+### ✅ Frontend
+- **Next.js 14+ (App Router)**
+- **React**
+- **TailwindCSS**
+- **Shadcn/UI**
+- **Lucide Icons**
+- **Fetch API**
+- **LocalStorage session handling**
 
-Tehnologije
+---
 
+## 👥 Uloge korisnika
 
-Algoritmi za uparivanje
+| Uloga | Dozvole |
+|--------|----------|
+| **ADMIN** | Kreira sesije, upravlja korisnicima, vidi sve podatke |
+| **EMPLOYEE** | Vidi samo vlastiti rezultat |
 
+---
 
-Baza podataka – model
+## 🔐 Sigurnost sistema
 
+- Lozinke se čuvaju pomoću **bcrypt hashed passworda**
+- Autentifikacija preko **JWT tokena**
+- Middleware:
+  - `authMiddleware` – validacija tokena
+  - `requireAdmin` – dozvola samo adminu
+- Svi osjetljivi API pozivi su zaštićeni tokenom
 
-API rute i objašnjenja
+---
 
+## 🔄 Algoritmi uparivanja
 
-Frontend struktura i logika
+### ✅ 1. OPTIMAL algoritam
+**Cilj:** Svaki korisnik dobije tačno jednog primatelja poklona  
+**Karakteristike:**
+- Nema unmatched korisnika
+- Bez samododjele
+- Stabilan i deterministički rezultat
 
+✅ Koristi se kada želimo fer i potpunu razmjenu.
 
-Dijagrami sistema
+---
 
+### ✅ 2. NAIVE algoritam
+**Cilj:** Nasumična dodjela  
+**Karakteristike:**
+- Mogu se pojaviti unmatched korisnici
+- Neko može ostati bez para
+- Brz, ali ne garantuje potpunost
 
-Kako pokrenuti projekat
+✅ Koristi se kao demonstracija nasumičnih algoritama.
 
+---
 
-Zašto je ovakva arhitektura izabrana
+### ✅ Pravila sistema:
+- Ako A izvuče B → **B više ne može biti izvučen**
+- A nikad ne može izvući sam sebe
+- A može izvući B dok B može izvući A (kružno dozvoljeno)
 
+---
 
+## 🗂 Backend Arhitektura
 
-📖 Opis projekta
-Secret Santa je full-stack web aplikacija za organizaciju razmjene poklona unutar kompanije.
-Administrator kreira sesiju („Secret Santa“ rundu), a sistem automatski generiše parove:
+/controllers
+/services
+/repositories
+/routes
+/middleware
+/generated/prisma
 
+shell
+Copy code
 
-ko kome kupuje poklon
+### 🔑 Ključni API Endpoints
 
+#### 🔐 Auth
+POST /auth/login
+POST /auth/register (ADMIN only)
 
-ko je ostao bez para (ako algoritam nije optimalan)
+shell
+Copy code
 
+#### 👥 Users
+GET /users (ADMIN)
+PATCH /users/:id/status (ADMIN)
 
-Korisnici (zaposlenici) se uloguju i odmah vide:
+shell
+Copy code
 
+#### 🎁 Sessions
+POST /sessions/generate-optimal (ADMIN)
+POST /sessions/generate-naive (ADMIN)
+GET /sessions (ADMIN)
+GET /sessions/:id (ADMIN)
+GET /sessions/latest (ADMIN)
+GET /sessions/me/latest (USER)
 
-kome kupuju poklon
+yaml
+Copy code
 
+---
 
-da li su unmatched
+## 🧭 Frontend Struktura
 
+### Routing
+- `/` → Login
+- `/admin` → Admin Dashboard
+- `/user` → User Dashboard
 
-poruku da admin još nije kreirao sesiju (ako nema nijedne)
+---
 
+## 🛠 Admin Funkcionalnosti
 
-Cilj projekta je demonstracija znanja u:
+✅ Pregled svih korisnika  
+✅ Aktivacija / deaktivacija korisnika  
+✅ Kreiranje sesija  
+✅ Pregled svih sesija  
+✅ Detaljan pregled parova  
+✅ Pregled unmatched korisnika  
+✅ Automatski refresh nakon akcija  
 
+---
 
-backend arhitekturi
+## 👤 User Funkcionalnosti
 
+✅ Prikaz samo **svog receivera**  
+✅ Prikaz poruke ako je:
+- Unmatched
+- Nema još nijedne sesije  
+✅ Potpuna privatnost podataka  
 
-frontend arhitekturi
+---
 
+## 🗃 Session Prikaz
 
-algoritmima
+Admin vidi:
+- ID sesije
+- Ko ju je kreirao
+- Datum kreiranja
+- Broj parova
+- Broj unmatched korisnika
+- Sve parove poimenično
 
+Korisnik vidi:
+- Samo svoje ime i svog receivera
 
-zaštiti pristupa (autentikacija / autorizacija)
+---
 
+## 🧪 Testiranje sistema
 
-tehničkoj dokumentaciji i dizajnu sistema
+Backend se testira putem:
+- ✅ Postman
+- ✅ cURL
 
+Frontend kroz:
+- ✅ Real-time fetch API
+- ✅ JWT token validaciju
+- ✅ UI fallback stanje
 
+---
 
-🚀 Glavne funkcionalnosti
-👤 Admin
+## 📐 Dijagram tokova (logički opis)
 
+### 1️⃣ Login Flow
+Frontend → /auth/login → JWT → LocalStorage → Redirect User/Admin
 
-Login
+shell
+Copy code
 
+### 2️⃣ Admin Creates Session
+Admin → /sessions/generate-* → Algorithm → Prisma → DB → Frontend Refresh
 
-Pregled svih korisnika
+shell
+Copy code
 
+### 3️⃣ User Checks Assignment
+User → /sessions/me/latest → Backend Filter → Single Result
 
-Aktiviranje/deaktiviranje korisnika
+yaml
+Copy code
 
+---
 
-Registracija novih korisnika
+## 📌 Zašto 등록 korisnika može samo ADMIN?
 
+✅ Sigurnost sistema  
+✅ Kontrolisana organizacija  
+✅ Sprječavanje lažnih prijava  
+✅ Usklađeno sa realnim poslovnim okruženjem  
 
-Kreiranje nove Secret Santa sesije
+---
 
+## 🚀 Pokretanje projekta
 
-Pregled svih sesija
-
-
-Detaljan prikaz uparenih korisnika
-
-
-Pregled unmatched korisnika
-
-
-🧑‍💼 User
-
-
-Login
-
-
-Pregled kome kupuje poklon
-
-
-Obavijest da je unmatched
-
-
-Obavijest da sesija još ne postoji
-
-
-Logout
-
-
-
-🔐 Uloge korisnika
-UlogaOpisADMINIma sve privilegije – upravlja sistemomEMPLOYEEMože samo da vidi svoje uparivanje
-➡️ Registracija je dozvoljena samo adminu
-Zašto?
-
-
-jer zaposlena osoba ne treba sama kreirati nalog
-
-
-admin kontroliše ko učestvuje
-
-
-osigurava se integritet i sprečava zloupotreba
-
-
-
-🏛 Arhitektura sistema
-Frontend (Next.js)  →  Backend API (Express + Prisma)  →  PostgreSQL Database
-
-Frontend (Next.js 14)
-
-
-Client-side components ("use client")
-
-
-Custom UI sistem (Button, Card, Badge…) inspirisan shadcn/ui
-
-
-State management per-page (useState/useEffect)
-
-
-LocalStorage za token i user info
-
-
-Routing: /admin i /user dashboardi
-
-
-Backend
-
-
-Node.js + Express
-
-
-Prisma ORM
-
-
-Services + Repository pattern (čisto razdvajanje logike)
-
-
-Auth middleware (JWT)
-
-
-Dva algoritma generisanja parova
-
-
-
-🧠 Algoritmi za uparivanje
-Postoje dva načina kreiranja sesije.
-
-1️⃣ OPTIMAL (zadani / preporučeni)
-Garantuje da:
-
-
-svi korisnici imaju par
-
-
-niko ne dobija samog sebe
-
-
-nema ciklusa dužine 1
-
-
-kreira "perfect matching"
-
-
-U osnovi radi kao:
-1. napravi listu svih korisnika
-2. pronađi permutaciju gdje niko ne daje poklon sam sebi
-3. ako postoji – gotovi ste (uvijek postoji ako su ≥ 2 korisnika)
-
-2️⃣ NAIVE (slučajni shuffle)
-Radi kao:
-
-
-permutacija korisnika
-
-
-parovi se kreiraju redom
-
-
-ali moguće:
-
-
-da neka osoba ostane bez para
-
-
-da ciklusi budu nepravični
-
-
-da viška korisnika ostane unmatched
-
-
-
-
-Ovo postoji da se pokaže poređenje algoritama i da admin vidi razliku.
-
-🗃 Baza podataka – model
-User (id, firstName, lastName, email, role, isActive)
-SecretSantaSession (id, createdByUserId, mode, createdAt)
-Pair (id, sessionId, giverId, receiverId)
-UnmatchedUser (id, sessionId, userId)
-
-Relacije
-Session 1 --- N Pair
-Session 1 --- N UnmatchedUser
-
-User 1 --- N Pair (giver)
-User 1 --- N Pair (receiver)
-
-
-🔌 API rute i objašnjenja
-AUTH
-RutaMetodaAccessOpis/auth/loginPOSTPublicLogin korisnika/auth/registerPOSTAdmin onlyKreiranje korisnika
-
-SESSION ROUTES (admin only)
-RutaMetodaOpis/sessions/generate-optimalPOSTKreira sesiju koristeći optimal algoritam/sessions/generate-naivePOSTKreira sesiju koristeći naive algoritam/sessionsGETLista svih sesija (sa brojem parova)/sessions/:idGETDetalji jedne sesije/sessions/latestGETNajnovija sesija
-
-USER ROUTES
-RutaMetodaOpis/user/me/latestGETZa employee-ja – ko mu je par
-Backend uvijek vraća strukturu:
-{
-  sessionId,
-  mode,
-  isUnmatched,
-  receiver: { firstName, lastName } | null
-}
-
-
-🎨 Frontend struktura i logika
-src/
-  app/
-    admin/
-      page.tsx          ← Admin Dashboard
-    user/
-      page.tsx          ← User Dashboard
-    components/
-      LoginForm.tsx
-      UsersList.tsx
-      CreateSession.tsx
-      SessionsList.tsx
-      RegisterUserModal.tsx
-      ui/
-        button.tsx
-        card.tsx
-        badge.tsx
-
-Frontend radi kroz:
-
-
-localStorage za čuvanje tokena
-
-
-provjeru role (ADMIN / USER)
-
-
-svaki dashboard ima vlastiti view state
-
-
-API pozive prema backendu
-
-
-
-📊 Dijagrami sistema
-
-1️⃣ Use Case dijagram
-          +-------------------+
-          |      ADMIN        |
-          +-------------------+
-                |       \
-                |        \
-                v         v
-     Create Session     Manage Users
-                |
-                v
-          View All Sessions
-
-          +-------------------+
-          |     EMPLOYEE      |
-          +-------------------+
-                 |
-                 v
-        View Assignment (Gift Info)
-
-
-2️⃣ Sekvencijski dijagram – kreiranje sesije
-Admin → Frontend → Backend → SessionService → SessionRepository → DB
-           |            |           |               |
-           | POST /generate-optimal |               |
-           | ---------------------> |               |
-           |                        | find users    |
-           |                        | run algorithm |
-           |                        | save session  |
-           | <--------------------- | return data   |
-Display Success
-
-
-3️⃣ Sekvencijski dijagram – user vidi assignment
-User → Frontend → Backend (/user/me/latest) → Service → DB
-           |               |                    |
-           | GET request   |                    |
-           | ------------> | get latest session |
-           |               | find pair          |
-           | <------------ | return result      |
-Frontend prikaže receivera ili unmatched poruku
-
-
-▶️ Kako pokrenuti projekat
-Backend
-cd backend
-npm install
-npx prisma migrate dev
-npm run dev
-
-Frontend
-cd frontend
+### Backend:
+```bash
 npm install
 npm run dev
+Frontend:
+bash
+Copy code
+npm install
+npm run dev
+✅ Zaključak
+Ovaj projekat demonstrira:
 
+Siguran full-stack sistem
 
-💡 Zašto je ovakva arhitektura izabrana?
-✔ Repository + Service pattern
-Čisti backend, jasna odvojenost:
+Implementaciju algoritama
 
+Role-based autentifikaciju
 
-service = biznis logika
+Profesionalnu API arhitekturu
 
+Praktičnu primjenu u realnom scenariju
 
-repository = rad sa bazom
+🔐 Sistem je spreman za produkciju uz minimalne prilagodbe (deploy, SSL, env promjenljive).
 
-
-controller = HTTP responsi
-
-
-✔ Algoritmi odvojeni u /algorithms folder
-Testabilno, čitko, može se proširiti.
-✔ Next.js
-Omogućuje:
-
-
-reaktivni UI
-
-
-jednostavno rukovanje formama
-
-
-komponente se modularno prave
-
-
-sigurnije rukovanje route pristupom
-
-
-✔ Admin i User dijeljeni, ali odvojeni dashboardi
-Daje bolju UX jasnoću.
-✔ UI sistem (Card, Button, Badge)
-Uniforman izgled, lakše je širiti UI.
-
-
-
+Autor:
+[Ime i prezime]
+Fakultet / Projekat: Secret Santa Web Application
+Tehnologije: Node.js, Next.js, PostgreSQL, Prisma, JWT
