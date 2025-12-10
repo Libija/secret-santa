@@ -2,7 +2,7 @@
 
 import type * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
-import { cn } from "@/lib/utils"
+import { cn } from "./utils"
 
 function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
