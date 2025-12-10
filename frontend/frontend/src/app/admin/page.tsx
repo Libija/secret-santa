@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "../components/ui/button";
 import AdminNav from "../components/AdminNav";
 //import SessionsList from "../components/SessionsList";
-//import UsersList from "../components/UsersList";
+import UsersList from "../components/UsersList";
 //import CreateSession from "../components/CreateSession";
 
 type AdminView = "dashboard" | "sessions" | "users" | "create";
