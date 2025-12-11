@@ -10,10 +10,10 @@ declare global {
     }
 
     interface Request {
-      user?: AuthUser; // 👈 nema više userId, sve je u id
+      user?: AuthUser; 
     }
   }
 }
 
-// ovo mora biti tu da fajl bude modul
+
 export {};

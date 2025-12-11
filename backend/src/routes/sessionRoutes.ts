@@ -12,7 +12,7 @@ import { authMiddleware, requireAdmin } from '../middleware/authMiddleware';
 
 const router = Router();
 
-// sve rute za sesije su admin-only
+
 router.post(
   '/generate-optimal',
   authMiddleware,

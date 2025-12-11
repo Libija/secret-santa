@@ -11,7 +11,7 @@ if (!JWT_SECRET) {
 
 const JWT_EXPIRES_IN = '8h';
 
-// ----------------- LOGIN ----------------- DODAJ DA PROVJERAVA JEL AKTIVAN AKO JES MOZE LOGIN AKO NE NE MOZE THROW NESTO
+
 export async function login(email: string, password: string) {
   const user = await userRepository.findByEmail(email);
 
@@ -50,7 +50,7 @@ export async function login(email: string, password: string) {
   };
 }
 
-// ----------------- REGISTER -----------------
+
 export async function register(params: {
   email: string;
   password: string;
@@ -60,16 +60,16 @@ export async function register(params: {
 }) {
   const { email, password, firstName, lastName, role } = params;
 
-  // 1) Provjera da li već postoji user sa tim emailom
+  
   const existing = await userRepository.findByEmail(email);
   if (existing) {
     throw new Error('EMAIL_TAKEN');
   }
 
-  // 2) Hash passworda
+  
   const passwordHash = await bcrypt.hash(password, 10);
 
-  // 3) Pripremimo input za repository, KORISTIMO CreateUserInput
+  
   const createInput: CreateUserInput = {
     email,
     passwordHash,

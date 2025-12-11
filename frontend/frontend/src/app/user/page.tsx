@@ -41,7 +41,7 @@ export default function UserDashboard() {
       const data = await res.json().catch(() => null);
 
       if (!res.ok) {
-        // npr: NO_SESSIONS_YET
+        
         setError(data?.message ?? "No session yet");
         setGiftInfo(null);
         return;
@@ -64,7 +64,7 @@ export default function UserDashboard() {
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-green-50 via-white to-red-50 overflow-hidden">
       <div className="relative">
-        {/* HEADER */}
+        {}
         <header className="p-4 flex justify-end">
           <Button
             onClick={handleLogout}
@@ -74,7 +74,7 @@ export default function UserDashboard() {
           </Button>
         </header>
 
-        {/* MAIN */}
+        {}
         <div className="flex items-center justify-center" style={{ minHeight: "calc(100vh - 100px)" }}>
           <div className="max-w-md w-full px-4">
             <div className="text-center mb-8">
@@ -87,7 +87,7 @@ export default function UserDashboard() {
               <p className="text-gray-600">Your Secret Santa Assignment</p>
             </div>
 
-            {/* LOADING */}
+            {}
             {isLoading && (
               <Card>
                 <CardContent className="pt-6 text-center text-gray-500">
@@ -96,7 +96,7 @@ export default function UserDashboard() {
               </Card>
             )}
 
-            {/* ERROR = NEMA SESIJA */}
+            {}
             {!isLoading && error && (
               <Card className="bg-gradient-to-br from-gray-50 to-slate-100 border-gray-300 shadow-lg">
                 <CardContent className="pt-8 pb-8 text-center space-y-3">
@@ -111,7 +111,7 @@ export default function UserDashboard() {
               </Card>
             )}
 
-            {/* UNMATCHED */}
+            {}
             {!isLoading && giftInfo?.isUnmatched && (
               <Card className="bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-300 shadow-lg">
                 <CardContent className="pt-8 pb-8 text-center space-y-4">
@@ -126,7 +126,7 @@ export default function UserDashboard() {
               </Card>
             )}
 
-            {/* MATCHED */}
+            {}
             {!isLoading && giftInfo && !giftInfo.isUnmatched && giftInfo.receiver && (
               <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-300 shadow-lg">
                 <CardContent className="pt-8 pb-8">

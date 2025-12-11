@@ -10,12 +10,12 @@ if (!JWT_SECRET) {
 }
 
 interface AuthTokenPayload extends JwtPayload {
-  sub: string;      // 👈 id kao string (kao u JWT standardu)
+  sub: string;      
   email: string;
   role: UserRole;
 }
 
-// ✅ Middleware: provjera da li je user logovan
+
 export function authMiddleware(
   req: Request,
   res: Response,
@@ -35,7 +35,7 @@ export function authMiddleware(
     const payload = jwt.verify(token, JWT_SECRET) as AuthTokenPayload;
 
     req.user = {
-      id: Number(payload.sub), // 👈 pretvaramo string u number
+      id: Number(payload.sub), 
       email: payload.email,
       role: payload.role,
     };
@@ -47,7 +47,6 @@ export function authMiddleware(
   }
 }
 
-// ✅ Admin-only middleware
 export function requireAdmin(
   req: Request,
   res: Response,

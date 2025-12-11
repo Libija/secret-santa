@@ -31,7 +31,7 @@ export default function SessionsList() {
   >({});
   const [detailsLoadingId, setDetailsLoadingId] = useState<number | null>(null);
 
-  // --- učitavanje liste sesija (/sessions) ---
+  
   const loadSessions = async () => {
     setIsLoading(true);
     setError(null);
@@ -58,7 +58,7 @@ export default function SessionsList() {
         return;
       }
 
-      // backend vraća { sessions: [...] }
+      
       const list = (data?.sessions ?? []) as SessionSummary[];
       setSessions(list);
     } catch (err) {
@@ -73,9 +73,9 @@ export default function SessionsList() {
     void loadSessions();
   }, []);
 
-  // --- učitavanje detalja jedne sesije (/sessions/:id) ---
+ 
   const loadSessionDetails = async (sessionId: number) => {
-    // ako već imamo detalje u state-u, ne zovemo ponovo API
+    
     if (detailsById[sessionId]) {
       return;
     }
@@ -105,7 +105,7 @@ export default function SessionsList() {
         return;
       }
 
-      // oblik koji vraća backend: session sa pairs[] + unmatchedUsers[]
+
       const rawPairs = (data?.pairs ?? []) as any[];
       const rawUnmatched = (data?.unmatchedUsers ?? []) as any[];
 
@@ -141,12 +141,11 @@ export default function SessionsList() {
 
   const handleToggleExpand = async (sessionId: number) => {
     if (expandedSessionId === sessionId) {
-      // zatvaramo
       setExpandedSessionId(null);
       return;
     }
 
-    // otvaramo – prvo učitamo detalje ako ih još nema
+    
     await loadSessionDetails(sessionId);
     setExpandedSessionId(sessionId);
   };
@@ -159,7 +158,7 @@ export default function SessionsList() {
     );
   }
 
-  // 👉 ID zadnje kreirane sesije (najveći createdAt)
+  
   const latestSessionId =
     sessions.length > 0
       ? sessions.reduce(

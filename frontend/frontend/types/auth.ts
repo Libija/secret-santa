@@ -1,4 +1,4 @@
-// frontend/types/auth.ts
+
 export type UserRole = 'ADMIN' | 'EMPLOYEE';
 
 export interface AuthUser {

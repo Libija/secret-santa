@@ -114,7 +114,7 @@ export async function listSessionsHandler(
   }
 }
 
-// ✅ NOVO: detalji jedne sesije (parovi + unmatched)
+
 export async function getSessionByIdHandler(
   req: Request,
   res: Response,
