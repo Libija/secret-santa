@@ -36,7 +36,7 @@ export const userRepository = {
     async listAllOrderedForAdmin() {
     return prisma.user.findMany({
       orderBy: [
-        { isActive: 'desc' },     // true (1) ide prije false (0)
+        { isActive: 'desc' },    
         { firstName: 'asc' },
         { lastName: 'asc' },
       ],

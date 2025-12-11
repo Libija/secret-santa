@@ -5,7 +5,7 @@ import { authMiddleware, requireAdmin } from '../middleware/authMiddleware';
 
 const router = Router();
 
-// GET /users  -> samo admin, vraća sve usere
+
 router.get('/', authMiddleware, requireAdmin, listUsersHandler);
 router.patch('/:id/status', authMiddleware, requireAdmin, updateUserStatusHandler);
 

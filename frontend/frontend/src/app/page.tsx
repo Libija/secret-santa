@@ -30,7 +30,7 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      {/* Animated snowflakes background */}
+      {}
       <div className="absolute inset-0 pointer-events-none">
         {[...Array(20)].map((_, i) => (
           <Snowflake

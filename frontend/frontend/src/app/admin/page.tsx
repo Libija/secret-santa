@@ -24,7 +24,7 @@ export default function AdminDashboard() {
     const role = localStorage.getItem("userRole");
     const name = localStorage.getItem("userName");
 
-    // ako nije logovan admin -> vrati na login
+    
     if (!token || role !== "ADMIN") {
       router.push("/");
       return;
@@ -49,10 +49,10 @@ export default function AdminDashboard() {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      {/* HEADER */}
+      {}
       <header className="border-b border-blue-200 bg-white/70 backdrop-blur sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
-          {/* lijevo: naslov + welcome */}
+          {}
           <div>
             <h1
               className="text-2xl font-bold text-transparent"
@@ -67,9 +67,9 @@ export default function AdminDashboard() {
             <p className="text-sm text-gray-600">Welcome, {userName}</p>
           </div>
 
-          {/* desno: NAV + Logout dugme */}
+          {}
           <div className="flex items-center gap-4">
-            {/* ovo je tvoj mali navbar (Dashboard / Sessions / Users / Create) */}
+            {}
             <AdminNav currentView={view} onViewChange={setView} />
 
             <Button
@@ -82,12 +82,12 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      {/* GLAVNI SADRŽAJ */}
+      {}
       <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Sve ispod se mijenja po current `view` state-u */}
+        {}
         {view === "dashboard" && (
           <div className="grid md:grid-cols-3 gap-10 mt-16">
-            {/* 3 kartice koje samo prebacuju view kad klikneš */}
+            {}
             <div
               className="bg-white/95 backdrop-blur border-blue-200 cursor-pointer hover:shadow-lg transition-shadow rounded-xl p-6"
               onClick={() => setView("sessions")}

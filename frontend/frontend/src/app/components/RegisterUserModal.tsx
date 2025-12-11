@@ -56,7 +56,7 @@ export default function RegisterUserModal({
         return;
       }
 
-      // reset polja
+      
       setFirstName("");
       setLastName("");
       setEmail("");

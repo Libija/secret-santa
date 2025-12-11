@@ -1,17 +1,17 @@
 {
   "compilerOptions": {
-    // gdje su nam TS fajlovi i gdje ide build
+   
     "rootDir": "./src",
     "outDir": "./dist",
 
-    // Node backend
+   
     "target": "ES2020",
     "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["ES2020"],
     "types": ["node"],
 
-    // Kvalitet koda / tipovi
+    
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,

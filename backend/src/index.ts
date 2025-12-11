@@ -15,11 +15,11 @@ dotenv.config();
 
 const app = express();
 
-// basic middlewares
+
 app.use(cors());
 app.use(express.json());
 
-// health-check ruta (da testiramo da backend radi)
+
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Backend is up 🚀' });
 });
@@ -31,7 +31,7 @@ app.get('/health/db', authMiddleware, async (req, res) => {
     res.json({
       ok: true,
       message: 'DB connection OK',
-      user: req.user, // samo da vidiš da middleware radi
+      user: req.user, 
     });
   } catch (error) {
     console.error('DB HEALTH ERROR:', error);

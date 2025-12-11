@@ -28,7 +28,6 @@ export default function LoginForm() {
       const data = await response.json().catch(() => null)
 
       if (!response.ok) {
-        // backend već šalje { message: "..."} pa to iskoristimo
         const message =
           data?.message ??
           (response.status === 401
@@ -39,7 +38,7 @@ export default function LoginForm() {
         return
       }
 
-      // očekujemo: { token, user: { id, email, firstName, lastName, role } }
+      
       const { token, user } = data
 
       if (!token || !user) {
@@ -47,14 +46,14 @@ export default function LoginForm() {
         return
       }
 
-      // sačuvamo stvari u localStorage – ovo koristi i Home (page.tsx)
+      
       localStorage.setItem("token", token)
       localStorage.setItem("userId", String(user.id))
       localStorage.setItem("userRole", user.role)
       localStorage.setItem("userEmail", user.email)
       localStorage.setItem("userName", `${user.firstName} ${user.lastName}`)
 
-      // redirect po roli
+     
       if (user.role === "ADMIN") {
         window.location.href = "/admin"
       } else {

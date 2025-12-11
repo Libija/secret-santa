@@ -10,24 +10,19 @@ export interface AlgorithmResult {
   unmatchedUserIds: number[];
 }
 
-/**
- * OPTIMALNI algoritam:
- * - svi aktivni učesnici imaju tačno jednog kome daju i od koga dobijaju
- * - nema sam sebi
- * - nema neuparenih
- */
+
 export function generateOptimal(users: { id: number }[]): AlgorithmResult {
   const ids = users.map((u) => u.id);
 
   if (ids.length < 2) {
-    // ako ima 0 ili 1 user -> svi su unmatched (tj. niko ne može igrat)
+    
     return {
       pairs: [],
       unmatchedUserIds: [...ids],
     };
   }
 
-  // napravi kopiju i promiješaj
+  
   const shuffled = [...ids];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -45,6 +40,6 @@ export function generateOptimal(users: { id: number }[]): AlgorithmResult {
 
   return {
     pairs,
-    unmatchedUserIds: [], // u optimalnoj verziji nema neuparenih
+    unmatchedUserIds: [], 
   };
 }

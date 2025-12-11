@@ -45,7 +45,7 @@ export default function UsersList() {
         return;
       }
 
-      // backend: { users: [...] }
+      
       setUsers(data.users ?? []);
     } catch (err) {
       console.error("Load users error:", err);
@@ -89,7 +89,7 @@ export default function UsersList() {
         return;
       }
 
-      // backend vraća updated user -> updejtamo listu
+      
       const updated = data as User;
       setUsers((prev) =>
         prev.map((u) => (u.id === updated.id ? updated : u))
@@ -102,7 +102,7 @@ export default function UsersList() {
 
   const handleUserCreated = () => {
     setShowRegisterModal(false);
-    // nakon registracije refrešujemo listu
+    
     void loadUsers();
   };
 

@@ -6,7 +6,7 @@ import { generateOptimal } from './algorithms/generateOptimal';
 import { generateNaive } from './algorithms/generateNaive';
 
 export async function generateOptimalSession(adminUserId: number) {
-  // Učesnici: svi aktivni useri (možeš kasnije ograničiti na EMPLOYEE role, ako želiš)
+  
   const users = await userRepository.listAllActive();
 
   if (users.length < 2) {
@@ -93,7 +93,7 @@ export async function getMyLatestAssignment(userId: number) {
 export async function getAllSessionsForAdmin() {
   const sessions = await sessionRepository.listAllSessionsSummary();
 
-  // ovdje ih možemo malo “pripremiti” za front
+  
   return sessions.map((s) => ({
     id: s.id,
     createdAt: s.createdAt,

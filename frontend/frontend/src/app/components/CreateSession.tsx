@@ -35,7 +35,7 @@ export default function CreateSession({ onSuccess }: CreateSessionProps) {
         return;
       }
 
-      // biramo endpoint na osnovu moda
+      
       const url =
         mode === "OPTIMAL"
           ? `${API_BASE_URL}/sessions/generate-optimal`
@@ -60,13 +60,13 @@ export default function CreateSession({ onSuccess }: CreateSessionProps) {
         return;
       }
 
-      // backend vraća cijeli session objekt, ima id
+      
       setSuccess(`Session created successfully! Session ID: ${data.id}`);
 
-      // po želji resetujemo na OPTIMAL
+      
       setMode("OPTIMAL");
 
-      // obavijestimo parent (AdminDashboard) da je gotovo -> prebaci na "sessions"
+      
       onSuccess();
     } catch (err) {
       console.error("Create session error:", err);
